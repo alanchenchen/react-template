@@ -19,5 +19,5 @@ A react template with webpack for building your react project
 
 ### 注意事项
 * 模板支持less和stylus，但是必须要自己安装less或者stylus才有效，如果像使用sass，请自己在webpack.base.js内添加sass-loader.
-* 模板支持手动修改devServer端口，默认8080，可以在webpack.config文件夹下的config.js里修改
+* 模板支持手动修改devServer端口，默认4000，可以在webpack.config文件夹下的config.js里修改
 * 模板支持手动添加第三方库打包，默认打包了react、react-dom、react-router，使用方法见config.js。如果想添加，必须要保证安装了对应的库，否则会报错！
