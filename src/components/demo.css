@@ -1,0 +1,25 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.demo{
+    padding-top: 100px;
+    text-align: center;
+}
+.title{
+    color:green;
+}
+.exp{
+    margin-top: 20px;
+    color: blueviolet;
+}
+.AHref{
+    display: inline-block;
+    width: 80px;
+    color:sandybrown;
+    transition: all .25s ;
+}
+.AHref:hover{
+    width: 120px;;
+    transform: scale(1.3);
+}
