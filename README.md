@@ -4,7 +4,7 @@ A react template with webpack for building your react project
 1. css，less，stylus解析编译，加入postcss自动添加css后缀，想要使用less或stylus，必须要自己手动npm安装对应的less或stylus。
 2. jsx和ES6语法解析，自动识别jsx文件，并且支持ES6最新语法，注意，并没有支持runtime和polyfill，也就是说ES6之后新增的部分特性不支持，例如：async和generator。pormise本身是支持的。
 3. css内图片和html图片均自动解析并添加hash缓存，字体图标也支持，但在引入阿里的iconfont必须要手动更iconfont.css内的路径为相对路径。
-4. 模板内置了本地服务器devServer，自动启用默认端口为8080服务器，一旦启用开发模式，自动打开index.html。默认提供eval-source-map供调试。
+4. 模板内置了本地服务器devServer，自动启用默认端口为4000服务器，一旦启用开发模式，自动打开index.html。默认提供eval-source-map供调试。
 5. 模板支持开发模式中命令行报错美化，跟vue-cli的webpack模板一致。
 6. 生产模式支持提取公共chunks打包，默认将开发代码和第三方库以及webpack运行的runtime文件分离。默认打包压缩混淆并提供source-map供调试。
 7. 模板默认设置打包文件所有资源为相对路径，这是为了避免在放到服务器时文件不在根目录导致路径出错的问题。也就是说，打包完后，你可以直接打开index.html访问。
