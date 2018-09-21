@@ -47,23 +47,20 @@ const RouterView = (props) => {
         })
     }
 
+    // react 16 可以直接在render返回数组或字符串，不需要用一个标签来包裹
     return (
-        <div>
-            {
-                targetRoutes.map((route, i) => {
-                    return (
-                        <Route 
-                            key={`${route.path}-${i}`} 
-                            path={route.path}
-                            exact={route.exact} 
-                            strict={route.strict}
-                            sensitive={route.sensitive} 
-                            component={route.component} 
-                        />
-                    )
-                })
-            }
-        </div>
+            targetRoutes.map((route, i) => {
+                return (
+                    <Route 
+                        key={`${route.path}-${i}`} 
+                        path={route.path}
+                        exact={route.exact} 
+                        strict={route.strict}
+                        sensitive={route.sensitive} 
+                        component={route.component} 
+                    />
+                )
+            })
     )
 }
 

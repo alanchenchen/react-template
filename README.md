@@ -1,14 +1,16 @@
-A react template with webpack for building your react project
+A react template with webpack for building your react SPA
 ## 一款专门适配react开发的webpack模板
+> Based on webpack (3.8.1), react-router-dom (4.3.1) and react (16.5.2)
 ### 功能
 1. css，less，stylus解析编译，想要使用less或stylus，必须要自己手动npm安装对应的less或stylus。
 2. css内图片自动解析并添加hash缓存，字体图标也支持，但在引入阿里的iconfont必须要手动更iconfont.css内的路径为相对路径。
 3. jsx和ES6语法解析，自动识别jsx文件，并且支持ES6最新语法，支持stage3语法，例如async函数，也支持类的新属性和静态属性写法。
 4. 支持webpack动态导入，配合`import`语法和`react-loadable`实现异步组件。
-5. 模板内置了本地服务器devServer，自动启用默认端口为4000服务器，一旦启用开发模式，自动打开index.html。默认提供eval-source-map供调试。
+5. 开发模式支持devServer，默认端口为8080，config.js提供了很多可配置项。默认提供eval-source-map供调试。
 6. 开发模式支持`react-hotloader`热替换，已经在`App.jsx`配置好，代码修改不会重新刷新页面而是局部更改。
-7. 生产模式支持提取公共chunks打包，默认将开发代码和第三方库以及webpack运行的runtime文件分离。默认打包压缩混淆并提供source-map供调试。
-8. 模板默认设置打包文件所有资源为相对路径，这是为了避免在放到服务器时文件不在根目录导致路径出错的问题。也就是说，打包完后，你可以直接打开index.html访问。
+7. 集成了react和react-rotuer-dom，并二次封装了原有的Route组件让嵌套路由配置更简单。并没有提供reduc或者mobx。
+8. 生产模式支持提取公共chunks打包，默认将开发代码和第三方库以及webpack运行的runtime文件分离。默认打包压缩混淆并提供source-map供调试。
+9. 模板默认设置打包文件所有资源为相对路径，这是为了避免在放到服务器时文件不在根目录导致路径出错的问题。也就是说，打包完后，你可以直接打开index.html访问。但是要注意如果项目里有路由，直接打开index.html可能页面不显示。这是因为路由是必须要放在服务器才生效，必须保证根路由打开index.html。
 
 ### Directory Tree
 ```bash
@@ -40,6 +42,7 @@ A react template with webpack for building your react project
 * 模板中二次封装的路由组件为`RouterView`，该组件和`react-router-dom`原生组件不会冲突，如果你想快速配置嵌套路由，建议使用`RouterView`和配置文件，你也可以单独使用`react-router-dom`的`Route`组件
 * `RouterView`组件模仿vue-router的配置，routeConfig.jsx中的配置格式如下:
 ```javascript
+    /*  routeConfig.jsx   */
     export default [
         {
             path: '/',
@@ -78,9 +81,39 @@ A react template with webpack for building your react project
         }
     ]
 
+    /* App.jsx  */
+    export default class App extends Component {
+        render() {
+            return (
+                <div>
+                    <h1>welcome to react</h1>
+                    <RouterView /> /* 在根路由的外层容器里引入该组件，可以不传任何props，默认加载所有一级路由 */
+                </div>
+            )
+        }
+    }
+    /* Home.jsx  */
+    export default class Home extends Component {
+        constructor(props) {
+            super(props)
+        }
+        render() {
+            return (
+                <div>
+                    <h1>this is Home</h1>
+                /* 
+                   在嵌套路由的外层容器里引入该组件，必传match，this.props.match是Home的父级组件Route传入的值，具体见react-router-dom文档。
+                   默认加载当前match对应下的直接子路由 
+                */
+                    <RouterView match={this.props.match} /> 
+                </div>
+            )
+        }
+    }
+
 ```
 
 ### 注意事项
-* 模板支持less和stylus，但是必须要自己安装less或者stylus才有效，如果像使用sass，请自己在webpack.base.js内添加sass-loader.
-* 模板支持手动修改devServer端口，默认4000，可以在webpack.config文件夹下的config.js里修改
-* 模板支持手动添加第三方库打包
+* 模板支持less和stylus，但是必须要自己安装less或者stylus才有效，如果想使用sass，请自己在webpack.dev.js和webpack.prod.js内添加sass-loader
+* 模板并没有提供redux或mobx，请注意，redux或者mobx配置可能需要更改`react-loadable`或`react-hotloader`，以具体文档为主
+* `RouterView`只是为了方便，你可以选择不使用，直接不在具体组件内调用即可，只有调用，路由配置才会生效。你甚至可以和原有的`Route`,`Link`,`Switch`等组件混搭，`RouterView`并没有改变什么，所以你也可以在其子组件中通过this.props.match获取到路由信息

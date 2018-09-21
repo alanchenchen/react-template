@@ -6,9 +6,7 @@ import RouterView from '@/router/index'
 const App = () => {
     return (
         <Router>
-            <div>
-                <RouterView />
-            </div>
+            <RouterView />
         </Router>
     )
 }

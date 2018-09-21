@@ -1,7 +1,7 @@
 module.exports = {
     dev: {
         host: 'localhost', //开发模式本地服务器的ip
-        useIPv4: false, //是否开启自动获取本机的IPv4地址，因为webpack-dev-server默认不能局域网访问，开启会覆盖host
+        useIPv4: false, //是否开启自动获取本机的IPv4地址，因为webpack-dev-server默认不能局域网访问，开启会覆盖host，只在wifi下生效
         port: 8080, //开发模式本地服务器的端口,如果发现被占用会自动重写
         autoOpenBrowser: false, //开发模式本地服务器是否自动打开首页
         //webpack的代理服务器功能，可以实现本地开发跨域请求，原理是运用了http-proxy-middleware中间件
