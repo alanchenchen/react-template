@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
+
 import avatar from '@/assets/Kianna.jpg'
-import './demo.css'
-export default class demo extends Component {
+import './Hello.css'
+
+export default class Hello extends Component {
+    constructor(props) {
+        super(props)
+    }
     render() {
         return (
             <div className="demo">

@@ -3,10 +3,10 @@
     margin: 0;
 }
 .demo{
-    padding-top: 100px;
     text-align: center;
 }
 .title{
+    margin-top: 40px;
     color:green;
 }
 .exp{

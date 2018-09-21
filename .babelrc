@@ -1,0 +1,20 @@
+{
+    "presets": [
+        "stage-3",
+        "env",
+        "react"
+    ],
+    "plugins": [
+        "react-hot-loader/babel",
+        [
+            "transform-runtime",
+            {
+                "polyfill": false,
+                "regenerator": true,
+                "moduleName": "babel-runtime"
+            }
+        ],
+        "transform-class-properties",
+        "syntax-dynamic-import"
+    ]
+}

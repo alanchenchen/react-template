@@ -1,148 +1,82 @@
 const path = require('path')
-const webpack = require('webpack')
-const CleanWebpackPlugin = require('clean-webpack-plugin')//清除打包后的重复chunk
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')//报错友好提示插件
 const HtmlWebpackPlugin = require('html-webpack-plugin')//生成一个html，自动嵌入打包后的js和css
-const ROOTPATH = process.cwd()
+const ROOTPATH = process.cwd() //获取进程的根绝对路径
 const env = process.env.NODE_ENV //获取进程的模式是开发环境还是生产环境
-const isProduct = env == 'production'
-const vendors = require('./config').vendors
-const ExtractTextPlugin = require('extract-text-webpack-plugin')//提取独立文件
-const extractCSS = new ExtractTextPlugin('static/style/[name]-css.css')
-const extractLESS = new ExtractTextPlugin('static/style/[name]-less.css')
-const extractSTYLUS = new ExtractTextPlugin('static/style/[name]-stylus.css')
+const isProduction = env == 'production'
+
+const CDNLibs = require('./config').CDNLibs
 
 module.exports = {
-	devtool: isProduct ? 'source-map' : 'eval-source-map',
-	entry:{
-		app:path.join(ROOTPATH, 'src/main.js'),
-		vendor:vendors//单入口必须在entry加入第三方类库，否则提取公共chunk为空
+	entry: {
+		app: path.join(ROOTPATH, 'src/main.js')
 	},
 	output: {
 		filename: 'static/js/[name].js',
-		path: path.join(ROOTPATH, 'dist'),//打包输出的目录
-		publicPath: isProduct ? './' : '/dist/' //打包后app.html引用打包后dist文件夹的路径
+		path: isProduction ? path.join(ROOTPATH, 'dist') : ROOTPATH, //打包输出的目录
+		publicPath: isProduction ? './' : '/' //打包输出的html引用打包后文件夹的路径
 	},
 	module: {
 		rules: [
 			{
-				test: /\.(htm|html)$/i,//打包html内src的图片
-				use: ['html-withimg-loader']
-			},
-			{
-				test: /\.(png|gif|jpg|svg|jpeg|woff|woff2|eot|ttf|otf)$/i,//打包css里图片和字体
+				test: /\.(png|gif|jpg|svg|jpeg)$/i, //打包css里图片
 				use: [
 					{
 						loader: 'url-loader',
 						options: {
 							limit: 8192,
-							name: '[name]-[hash:6].[ext]',
-							outputPath: 'static/img/', //图片和字体打包后存放的路径
+							name: '[name].[hash].[ext]',
+							outputPath: 'static/img/' //图片文件打包后存放的路径
 						}
 					}
 				]
 			},
 			{
-				test: /\.js$/,//打包js，转码ES6
+				test: /\.(woff|woff2|eot|ttf|otf)$/i,//打包css里字体
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							limit: 8192,
+							name: '[name].[hash].[ext]',
+							outputPath: 'static/fonts/' //字体文件打包后存放的路径
+						}
+					}
+				]
+			},
+			{
+				test: /\.(js|jsx)$/i, //打包js或jsx，转码ES6+
 				exclude: /(node_modules|bower_components)/,
 				include: path.join(ROOTPATH, 'src'),
 				use: {
 					loader: 'babel-loader',
 					options: {
-						presets: ['es2015', 'react', 'env'],
-						plugins: ["react-hot-loader/babel"]
+						presets: ['env', 'stage-3', 'react'],
+						plugins: ['react-hot-loader/babel', 'transform-class-properties']
 					}
 				}
-			},
-			{
-				test: /\.jsx$/i,//转码jsx
-				exclude: /(node_modules|bower_components)/,
-				include: path.join(ROOTPATH, 'src'),
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: ['es2015', 'react', 'env'],
-						plugins: ["react-hot-loader/babel"]
-					}
-				}
-			},
-			{
-				test: /\.css$/,//打包css
-				use: isProduct ?
-					extractCSS.extract({
-						publicPath: '../../', //打包后css文件中引用图片和字体的相对路径，此时为dist根目录
-						use: [
-							{
-								loader: 'css-loader',
-								options: {
-									minimize: true
-								}
-							},
-							'postcss-loader']
-					})
-					: ['style-loader', 'css-loader', 'postcss-loader']
-			},
-			{
-				test: /\.less$/,//打包less
-				use: isProduct ?
-					extractLESS.extract({
-						publicPath: '../../', //打包后css文件中引用图片和字体的相对路径，此时为dist根目录
-						use: [
-							{
-								loader: 'css-loader',
-								options: {
-									minimize: true
-								}
-							},
-							'less-loader']
-					})
-					: ['style-loader', 'css-loader', 'less-loader']
-			},
-			{
-				test: /\.styl$/,//打包stylus
-				use:isProduct ?
-					extractSTYLUS.extract({
-						publicPath: '../../', //打包后css文件中引用图片和字体的相对路径，此时为dist根目录
-						use: [
-							{
-								loader: 'css-loader',
-								options: {
-									minimize: true
-								}
-							},
-							'stylus-loader']
-					})
-					: ['style-loader', 'css-loader', 'stylus-loader']
 			}
 		]
 	},
-	plugins: isProduct ? [
-		extractCSS,
-		extractLESS,
-		extractSTYLUS,
-		new CleanWebpackPlugin('dist', { root: ROOTPATH }),//每次启动都会清除dist目录...
+	plugins: [
 		new HtmlWebpackPlugin({
-			template:  path.join(ROOTPATH, 'src/index.html'),
+			template: path.join(ROOTPATH, 'index.html'),
 			inject: true,
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			name:['vendor','manifest'],//vendor是为了提取第三方库到缓存，mainfest是为了避免内容改变hash改变
-			filename:'static/js/[name].[chunkhash].js',
-			minChunks:Infinity
+			minify: {
+				removeComments: true,
+				collapseWhitespace: true,
+				removeAttributeQuotes: true
+			},
+			// necessary to consistently work with multiple chunks via CommonsChunkPlugin
+			chunksSortMode: 'dependency'
 		})
-	]
-		: [
-			new CleanWebpackPlugin('dist', { root: ROOTPATH }),//每次启动都会清除dist目录...
-			new FriendlyErrorsWebpackPlugin(),
-			new HtmlWebpackPlugin({
-				template:  path.join(ROOTPATH, 'src/index.html'),
-				inject: true
-			})
-		],
+	],
 	resolve: {
 		alias: {
-			'@': path.resolve(ROOTPATH, 'src')
+			'@': path.resolve(ROOTPATH, 'src'),
+			'components': path.resolve(ROOTPATH, 'src/components'),
+			'views': path.resolve(ROOTPATH, 'src/views')
 		},
-		extensions: [".js", ".jsx"]
-	}
+		extensions: ['.js', '.jsx', '.json', '.css', '.less', '.styl']
+	},
+	externals: CDNLibs
 }
