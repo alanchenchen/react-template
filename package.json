@@ -1,12 +1,13 @@
 {
   "name": "react-template",
-  "version": "1.10.1",
+  "version": "1.2.1",
   "description": "A react webpack-template for building SPA",
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --progress --config ./webpack.config/webpack.dev.js",
-    "build": "cross-env NODE_ENV=production webpack --progress --config ./webpack.config/webpack.prod.js"
+    "build": "cross-env NODE_ENV=production webpack --progress --config ./webpack.config/webpack.prod.js",
+    "preview": "node webpack.config/server.js"
   },
   "author": "Alan",
   "license": "MIT",
