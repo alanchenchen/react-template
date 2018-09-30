@@ -10,7 +10,7 @@ A react template with webpack for building your react SPA
 6. 开发模式支持`react-hotloader`热替换，已经在`App.jsx`配置好，代码修改不会重新刷新页面而是局部更改。
 7. 集成了react和react-rotuer-dom，并二次封装了原有的Route组件让嵌套路由配置更简单。并没有提供reduc或者mobx。
 8. 生产模式支持提取公共chunks打包，默认将开发代码和第三方库以及webpack运行的runtime文件分离。默认打包压缩混淆并提供source-map供调试。
-9. 模板默认设置打包文件所有资源为相对路径，这是为了避免在放到服务器时文件不在根目录导致路径出错的问题。也就是说，打包完后，你可以直接打开index.html访问。但是要注意如果项目里有路由，直接打开index.html可能页面不显示。这是因为路由是必须要放在服务器才生效，必须保证根路由打开index.html。
+9. 模板默认设置打包文件所有资源为相对路径，这是为了避免放到服务器时文件不在根目录导致路径出错的问题。打包完后，你可以直接打开index.html访问。但是要注意如果项目里有路由，直接打开index.html可能页面空白。这是因为路由必须要放在服务器才生效，必须保证根路由打开index.html。为了避免这种问题，模板内置一个静态文件服务器，通过`npm run preview`调用。
 
 ### Directory Tree
 ```bash
@@ -34,8 +34,9 @@ A react template with webpack for building your react SPA
 
    **强烈建议使用alan-cli安装，极为便捷，使用方法见[alan-cli](https://github.com/alanchenchen/alan-cli)**  
 2. npm install 安装所有开发依赖和打包依赖
-3. npm start 或者 npm run dev 启动开发环境，会自动打开index.html
+3. npm start 或者 npm run dev 启动开发环境
 4. npm run build 启动打包程序，默认会在项目根目录生产dist文件夹，index.html在dist根目录，其余静态资源放在static文件夹内
+5. npm run preview 启动一个静态文件服务器，默认以dist文件夹作为根目录，目的是为了测试打包后项目是否可以正常访问，只作为一种前端自测手段
 
 ### 开发tips
 * SPA单页面应用大部分都是在开发组件和路由，本模板直接在App.jsx中最外层设置了根路由，新增页面只需要在router/routeConfig中添加路由参数即可
@@ -92,15 +93,15 @@ A react template with webpack for building your react SPA
             )
         }
     }
-    /* Home.jsx  */
-    export default class Home extends Component {
+    /* Sub.jsx  */
+    export default class Sub extends Component {
         constructor(props) {
             super(props)
         }
         render() {
             return (
                 <div>
-                    <h1>this is Home</h1>
+                    <h1>this is Sub</h1>
                 /* 
                    在嵌套路由的外层容器里引入该组件，必传match，this.props.match是Home的父级组件Route传入的值，具体见react-router-dom文档。
                    默认加载当前match对应下的直接子路由 
@@ -117,3 +118,4 @@ A react template with webpack for building your react SPA
 * 模板支持less和stylus，但是必须要自己安装less或者stylus才有效，如果想使用sass，请自己在webpack.dev.js和webpack.prod.js内添加sass-loader
 * 模板并没有提供redux或mobx，请注意，redux或者mobx配置可能需要更改`react-loadable`或`react-hotloader`，以具体文档为主
 * `RouterView`只是为了方便，你可以选择不使用，直接不在具体组件内调用即可，只有调用，路由配置才会生效。你甚至可以和原有的`Route`,`Link`,`Switch`等组件混搭，`RouterView`并没有改变什么，所以你也可以在其子组件中通过this.props.match获取到路由信息
+* `npm run preview`只有在`npm run build`才有效，否则打开服务器页面为空白
