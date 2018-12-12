@@ -25,9 +25,9 @@ A react template with webpack for building your react SPA
 ```
 > 强烈建议按照模板目录来进行开发，可以新增，不要删除
 
-* assets是静态资源，componets是组件，router是路由(已配置好)，views是页面级组件
+* assets是资源，componets是组件，router是路由(已配置好)，views是页面级组件，static是静态资源(最终会复制一份到dist的static目录下)
 * 基于react-router-dom，模板对Route组件进行了封装，为了更简单实现多层嵌套路由，模仿vue-router的api
-* 模板提供了3个路径符号，@ => src目录， components => src/components目录， views => src/views目录
+* 模板提供了3个路径符号，`@ => src目录`， `components => src/components目录`， `views => src/views目录`，`static => static目录`
 
 ### 使用
 1. git clone https://github.com/alanchenchen/react-template.git 或者使用alan-cli来安装

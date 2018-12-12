@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')//生成一个html，自动嵌入打包后的js和css
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ROOTPATH = process.cwd() //获取进程的根绝对路径
 const env = process.env.NODE_ENV //获取进程的模式是开发环境还是生产环境
 const isProduction = env == 'production'
@@ -68,13 +69,21 @@ module.exports = {
 			},
 			// necessary to consistently work with multiple chunks via CommonsChunkPlugin
 			chunksSortMode: 'dependency'
-		})
+		}),
+		new CopyWebpackPlugin([
+			{ 
+				from: path.resolve(ROOTPATH, 'static'),
+				to: path.resolve(ROOTPATH, 'dist/static'),
+				ignore: ['.*']
+			}
+		])
 	],
 	resolve: {
 		alias: {
 			'@': path.resolve(ROOTPATH, 'src'),
 			'components': path.resolve(ROOTPATH, 'src/components'),
-			'views': path.resolve(ROOTPATH, 'src/views')
+			'views': path.resolve(ROOTPATH, 'src/views'),
+			'static': path.resolve(ROOTPATH, 'static')
 		},
 		extensions: ['.js', '.jsx', '.json', '.css', '.less', '.styl']
 	},

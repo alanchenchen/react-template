@@ -33,11 +33,11 @@ const devConfig = (port) =>{
 				},
 				{
 					test: /\.less$/i,//打包less
-					use: ['style-loader', 'css-loader', 'less-loader']
+					use: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader']
 				},
 				{
 					test: /\.styl$/i,//打包stylus
-					use: ['style-loader', 'css-loader', 'stylus-loader']
+					use: ['style-loader', 'css-loader', 'postcss-loader', 'stylus-loader']
 				}
 			]
 		},	
