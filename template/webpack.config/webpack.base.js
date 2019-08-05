@@ -60,7 +60,7 @@ module.exports = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: path.join(ROOTPATH, 'index.html'),
+			template: path.join(ROOTPATH, 'static/index.html'),
 			inject: true,
 			minify: {
 				removeComments: true,
@@ -74,7 +74,7 @@ module.exports = {
 			{ 
 				from: path.resolve(ROOTPATH, 'static'),
 				to: path.resolve(ROOTPATH, 'dist/static'),
-				ignore: ['.*']
+				ignore: ['.*', 'index.html']
 			}
 		])
 	],
